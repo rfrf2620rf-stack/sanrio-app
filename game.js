@@ -31,6 +31,11 @@ const CATCH_FALL_MAX   = 5000;      // 落下速度（ms）最遅
 const CATCH_SPAWN_MIN  = 600;
 const CATCH_SPAWN_MAX  = 1400;
 
+// ランキング定数
+const RANKING_KEY      = 'sanrio-game-ranking';
+const RANKING_TOP_N    = 3;
+const RANK_MEDALS      = ['🥇', '🥈', '🥉'];
+
 // ---- 共通ゲーム状態 ----
 let currentGame   = null;   // 'mole' | 'catch'
 let score          = 0;
@@ -317,6 +322,13 @@ function spawnConfetti() {
 //  リザルト画面（共通）
 // ===================================================================
 function showResult() {
+  // ランキング保存
+  const isNewRecord = saveScore(currentGame, score);
+
+  // NEW RECORD 表示
+  const newRecordEl = document.getElementById('result-new-record');
+  newRecordEl.style.display = isNewRecord ? 'block' : 'none';
+
   const starsEl = document.getElementById('result-stars');
   const displayCount = Math.min(score, 15);
   let starsHTML = '';
@@ -325,13 +337,18 @@ function showResult() {
   starsEl.textContent = starsHTML;
 
   const msgEl = document.getElementById('result-message');
-  if (score >= 15)     msgEl.textContent = 'てんさい！！🎊';
-  else if (score >= 10) msgEl.textContent = 'すごーい！💖';
-  else if (score >= 5)  msgEl.textContent = 'じょうずだね！🌟';
-  else                  msgEl.textContent = 'たのしかったね！🎀';
+  if (isNewRecord)       msgEl.textContent = 'しんきろく！！👑🎊';
+  else if (score >= 15)  msgEl.textContent = 'てんさい！！🎊';
+  else if (score >= 10)  msgEl.textContent = 'すごーい！💖';
+  else if (score >= 5)   msgEl.textContent = 'じょうずだね！🌟';
+  else                   msgEl.textContent = 'たのしかったね！🎀';
 
   showScreen('screen-result');
-  playCheerSound();
+  if (isNewRecord) {
+    playNewRecordFanfare();
+  } else {
+    playCheerSound();
+  }
   spawnConfetti();
 }
 
@@ -592,6 +609,100 @@ function startBubbles() {
     area.appendChild(bubble);
     setTimeout(() => bubble.remove(), 6000);
   }, 400);
+}
+
+// ===================================================================
+//  ランキング (localStorage)
+// ===================================================================
+function getRanking() {
+  try {
+    const data = localStorage.getItem(RANKING_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {}
+  return { mole: [], catch: [] };
+}
+
+function setRanking(ranking) {
+  try {
+    localStorage.setItem(RANKING_KEY, JSON.stringify(ranking));
+  } catch (e) {}
+}
+
+/** スコアを保存し、新記録ならtrueを返す */
+function saveScore(gameType, newScore) {
+  if (newScore <= 0) return false;
+  const ranking = getRanking();
+  const list = ranking[gameType] || [];
+  list.push(newScore);
+  list.sort((a, b) => b - a);
+  ranking[gameType] = list.slice(0, RANKING_TOP_N);
+  setRanking(ranking);
+  // 新記録 = 保存後のTop Nに今回のスコアが含まれている
+  return ranking[gameType].indexOf(newScore) === 0 && list.length > 1 || list.length === 1;
+}
+
+function showRanking() {
+  const ranking = getRanking();
+  renderRankingList('ranking-mole', ranking.mole || []);
+  renderRankingList('ranking-catch', ranking.catch || []);
+  showScreen('screen-ranking');
+}
+
+function renderRankingList(containerId, scores) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  if (scores.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'ranking-empty';
+    empty.textContent = 'まだきろくがないよ';
+    container.appendChild(empty);
+    return;
+  }
+
+  scores.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'ranking-item';
+
+    const medal = document.createElement('span');
+    medal.className = 'ranking-medal';
+    medal.textContent = RANK_MEDALS[i] || '';
+
+    const label = document.createElement('span');
+    label.textContent = `${i + 1}い`;
+
+    const scoreSpan = document.createElement('span');
+    scoreSpan.className = 'ranking-score';
+    let stars = '';
+    const showCount = Math.min(s, 10);
+    for (let j = 0; j < showCount; j++) stars += '⭐';
+    if (s > 10) stars += `×${s}`;
+    scoreSpan.textContent = stars;
+
+    item.appendChild(medal);
+    item.appendChild(label);
+    item.appendChild(scoreSpan);
+    container.appendChild(item);
+  });
+}
+
+// NEW RECORD 用ファンファーレ
+function playNewRecordFanfare() {
+  try {
+    const ctx = getAudioCtx();
+    const melody = [523, 659, 784, 880, 1047, 1175, 1319];
+    melody.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.5);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.5);
+    });
+  } catch (e) {}
 }
 
 // ===================================================================
