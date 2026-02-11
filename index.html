@@ -37,6 +37,10 @@
           <span class="btn-menu-icon">🫧</span>
           <span class="btn-menu-label">キャラキャッチ</span>
         </button>
+        <button class="btn-menu btn-menu-ranking" onclick="showRanking()">
+          <span class="btn-menu-icon">👑</span>
+          <span class="btn-menu-label">ランキング</span>
+        </button>
       </div>
     </div>
   </div>
@@ -81,6 +85,7 @@
   <div id="screen-result" class="screen">
     <div class="result-content">
       <div class="result-title">🎉 すごーい！🎉</div>
+      <div id="result-new-record" class="result-new-record" style="display:none;">👑 NEW RECORD! 👑</div>
       <div id="result-stars" class="result-stars"></div>
       <div class="result-message" id="result-message">じょうずだね！</div>
       <div class="result-characters">
@@ -99,6 +104,28 @@
       </div>
     </div>
     <div id="confetti" class="confetti-container"></div>
+  </div>
+
+  <!-- ========== ランキング画面 ========== -->
+  <div id="screen-ranking" class="screen">
+    <div class="ranking-content">
+      <div class="ranking-title">👑 ランキング 👑</div>
+
+      <div class="ranking-section">
+        <div class="ranking-section-title">🕳️ もぐらたたき</div>
+        <div id="ranking-mole" class="ranking-list"></div>
+      </div>
+
+      <div class="ranking-section">
+        <div class="ranking-section-title">🫧 キャラキャッチ</div>
+        <div id="ranking-catch" class="ranking-list"></div>
+      </div>
+
+      <button class="btn-play btn-play-secondary" onclick="goToMenu()">
+        <span class="btn-emoji">🏠</span>
+        もどる
+      </button>
+    </div>
   </div>
 
   <script src="game.js"></script>
