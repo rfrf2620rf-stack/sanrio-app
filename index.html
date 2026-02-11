@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>サンリオ もぐらたたき 🎀</title>
+    <meta
+      name="description"
+      content="サンリオキャラクターのかわいいモグラ叩きゲーム！3歳から遊べるよ♪"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <!-- ========== スタート画面 ========== -->
+    <div id="screen-start" class="screen active">
+      <div class="title-area">
+        <h1 class="game-title">
+          <span class="title-icon">🎀</span>
+          もぐらたたき
+          <span class="title-icon">🎀</span>
+        </h1>
+        <div class="title-characters">
+          <img
+            src="images/mv-hellokitty.png"
+            alt="キティ"
+            class="title-char bounce-1"
+          />
+          <img
+            src="images/mv-cinnamon.png"
+            alt="シナモン"
+            class="title-char bounce-2"
+          />
+          <img
+            src="images/list-kuromi.png"
+            alt="クロミ"
+            class="title-char bounce-3"
+          />
+          <img
+            src="images/list-mymelody.png"
+            alt="マイメロ"
+            class="title-char bounce-4"
+          />
+          <img
+            src="images/list-pochacco.png"
+            alt="ポチャッコ"
+            class="title-char bounce-5"
+          />
+          <img
+            src="images/list-pompompurin.png"
+            alt="プリン"
+            class="title-char bounce-6"
+          />
+        </div>
+      </div>
+      <button id="btn-start" class="btn-play" onclick="startGame()">
+        <span class="btn-emoji">▶️</span>
+        あそぶ！
+      </button>
+    </div>
+
+    <!-- ========== ゲーム画面 ========== -->
+    <div id="screen-game" class="screen">
+      <div class="game-hud">
+        <div class="score-area">
+          <span class="score-label">⭐</span>
+          <div id="score-stars" class="score-stars"></div>
+        </div>
+        <div class="timer-bar-container">
+          <div id="timer-bar" class="timer-bar"></div>
+        </div>
+      </div>
+
+      <div id="game-board" class="game-board">
+        <!-- 6つの穴（JS で生成） -->
+      </div>
+
+      <!-- パーティクルコンテナ -->
+      <div id="particles" class="particles-container"></div>
+    </div>
+
+    <!-- ========== リザルト画面 ========== -->
+    <div id="screen-result" class="screen">
+      <div class="result-content">
+        <div class="result-title">🎉 すごーい！🎉</div>
+        <div id="result-stars" class="result-stars"></div>
+        <div class="result-message" id="result-message">じょうずだね！</div>
+        <div class="result-characters">
+          <img
+            src="images/mv-hellokitty.png"
+            alt="キティ"
+            class="result-char pop-in-1"
+          />
+          <img
+            src="images/list-mymelody.png"
+            alt="マイメロ"
+            class="result-char pop-in-2"
+          />
+        </div>
+        <button id="btn-restart" class="btn-play" onclick="restartGame()">
+          <span class="btn-emoji">🔄</span>
+          もういっかい！
+        </button>
+      </div>
+      <!-- 紙吹雪コンテナ -->
+      <div id="confetti" class="confetti-container"></div>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
