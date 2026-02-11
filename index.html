@@ -1,119 +1,106 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
-    <title>サンリオ もぐらたたき 🎀</title>
-    <meta
-      name="description"
-      content="サンリオキャラクターのかわいいモグラ叩きゲーム！3歳から遊べるよ♪"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <!-- ========== スタート画面 ========== -->
-    <div id="screen-start" class="screen active">
-      <div class="title-area">
-        <h1 class="game-title">
-          <span class="title-icon">🎀</span>
-          もぐらたたき
-          <span class="title-icon">🎀</span>
-        </h1>
-        <div class="title-characters">
-          <img
-            src="images/mv-hellokitty.png"
-            alt="キティ"
-            class="title-char bounce-1"
-          />
-          <img
-            src="images/mv-cinnamon.png"
-            alt="シナモン"
-            class="title-char bounce-2"
-          />
-          <img
-            src="images/list-kuromi.png"
-            alt="クロミ"
-            class="title-char bounce-3"
-          />
-          <img
-            src="images/list-mymelody.png"
-            alt="マイメロ"
-            class="title-char bounce-4"
-          />
-          <img
-            src="images/list-pochacco.png"
-            alt="ポチャッコ"
-            class="title-char bounce-5"
-          />
-          <img
-            src="images/list-pompompurin.png"
-            alt="プリン"
-            class="title-char bounce-6"
-          />
-        </div>
-      </div>
-      <button id="btn-start" class="btn-play" onclick="startGame()">
-        <span class="btn-emoji">▶️</span>
-        あそぶ！
-      </button>
-    </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>サンリオ ゲーム 🎀</title>
+  <meta name="description" content="サンリオキャラクターのかわいいゲーム！もぐらたたき＆キャラキャッチ♪ 3歳から遊べるよ♪">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
 
-    <!-- ========== ゲーム画面 ========== -->
-    <div id="screen-game" class="screen">
-      <div class="game-hud">
+  <!-- ========== メニュー画面 ========== -->
+  <div id="screen-menu" class="screen active">
+    <div class="menu-area">
+      <h1 class="menu-title">
+        <span class="title-icon">🎀</span>
+        サンリオ ゲーム
+        <span class="title-icon">🎀</span>
+      </h1>
+      <div class="title-characters">
+        <img src="images/mv-hellokitty.png" alt="キティ" class="title-char bounce-1">
+        <img src="images/mv-cinnamon.png" alt="シナモン" class="title-char bounce-2">
+        <img src="images/list-kuromi.png" alt="クロミ" class="title-char bounce-3">
+        <img src="images/list-mymelody.png" alt="マイメロ" class="title-char bounce-4">
+        <img src="images/list-pochacco.png" alt="ポチャッコ" class="title-char bounce-5">
+        <img src="images/list-pompompurin.png" alt="プリン" class="title-char bounce-6">
+      </div>
+      <div class="menu-buttons">
+        <button class="btn-menu btn-menu-mole" onclick="selectGame('mole')">
+          <span class="btn-menu-icon">🕳️</span>
+          <span class="btn-menu-label">もぐらたたき</span>
+        </button>
+        <button class="btn-menu btn-menu-catch" onclick="selectGame('catch')">
+          <span class="btn-menu-icon">🫧</span>
+          <span class="btn-menu-label">キャラキャッチ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== モグラたたきゲーム画面 ========== -->
+  <div id="screen-mole" class="screen">
+    <div class="game-hud">
+      <div class="hud-row">
+        <button class="btn-back" onclick="goToMenu()">🏠</button>
         <div class="score-area">
           <span class="score-label">⭐</span>
-          <div id="score-stars" class="score-stars"></div>
-        </div>
-        <div class="timer-bar-container">
-          <div id="timer-bar" class="timer-bar"></div>
+          <div id="mole-score-stars" class="score-stars"></div>
         </div>
       </div>
-
-      <div id="game-board" class="game-board">
-        <!-- 6つの穴（JS で生成） -->
+      <div class="timer-bar-container">
+        <div id="mole-timer-bar" class="timer-bar"></div>
       </div>
-
-      <!-- パーティクルコンテナ -->
-      <div id="particles" class="particles-container"></div>
     </div>
+    <div id="mole-board" class="game-board"></div>
+    <div id="mole-particles" class="particles-container"></div>
+  </div>
 
-    <!-- ========== リザルト画面 ========== -->
-    <div id="screen-result" class="screen">
-      <div class="result-content">
-        <div class="result-title">🎉 すごーい！🎉</div>
-        <div id="result-stars" class="result-stars"></div>
-        <div class="result-message" id="result-message">じょうずだね！</div>
-        <div class="result-characters">
-          <img
-            src="images/mv-hellokitty.png"
-            alt="キティ"
-            class="result-char pop-in-1"
-          />
-          <img
-            src="images/list-mymelody.png"
-            alt="マイメロ"
-            class="result-char pop-in-2"
-          />
+  <!-- ========== キャラキャッチゲーム画面 ========== -->
+  <div id="screen-catch" class="screen">
+    <div class="game-hud">
+      <div class="hud-row">
+        <button class="btn-back" onclick="goToMenu()">🏠</button>
+        <div class="score-area">
+          <span class="score-label">⭐</span>
+          <div id="catch-score-stars" class="score-stars"></div>
         </div>
+      </div>
+      <div class="timer-bar-container">
+        <div id="catch-timer-bar" class="timer-bar"></div>
+      </div>
+    </div>
+    <div id="catch-area" class="catch-area"></div>
+    <div id="catch-particles" class="particles-container"></div>
+  </div>
+
+  <!-- ========== リザルト画面 ========== -->
+  <div id="screen-result" class="screen">
+    <div class="result-content">
+      <div class="result-title">🎉 すごーい！🎉</div>
+      <div id="result-stars" class="result-stars"></div>
+      <div class="result-message" id="result-message">じょうずだね！</div>
+      <div class="result-characters">
+        <img src="images/mv-hellokitty.png" alt="キティ" class="result-char pop-in-1">
+        <img src="images/list-mymelody.png" alt="マイメロ" class="result-char pop-in-2">
+      </div>
+      <div class="result-buttons">
         <button id="btn-restart" class="btn-play" onclick="restartGame()">
           <span class="btn-emoji">🔄</span>
           もういっかい！
         </button>
+        <button class="btn-play btn-play-secondary" onclick="goToMenu()">
+          <span class="btn-emoji">🏠</span>
+          メニュー
+        </button>
       </div>
-      <!-- 紙吹雪コンテナ -->
-      <div id="confetti" class="confetti-container"></div>
     </div>
+    <div id="confetti" class="confetti-container"></div>
+  </div>
 
-    <script src="game.js"></script>
-  </body>
+  <script src="game.js"></script>
+</body>
 </html>
