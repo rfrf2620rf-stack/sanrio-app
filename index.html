@@ -9,8 +9,93 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
+  <style>
+    .access-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .access-gate-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      width: 90%;
+      max-width: 320px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    .access-gate-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+    .access-gate-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .access-gate-btn {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      background: #ff6b6b;
+      color: #fff;
+      cursor: pointer;
+    }
+    .access-gate-error {
+      color: #e63946;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- ========== アクセスゲート ========== -->
+  <div id="access-gate" class="access-gate">
+    <div class="access-gate-box">
+      <p class="access-gate-title">🔒 合言葉を入力してください</p>
+      <input type="password" id="access-gate-input" class="access-gate-input" placeholder="合言葉" autocomplete="off">
+      <button id="access-gate-btn" class="access-gate-btn">入る</button>
+      <p id="access-gate-error" class="access-gate-error" style="display: none">合言葉が違います</p>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var CODE = "fujifuji";
+      var gate = document.getElementById("access-gate");
+      var input = document.getElementById("access-gate-input");
+      var btn = document.getElementById("access-gate-btn");
+      var error = document.getElementById("access-gate-error");
+
+      function tryUnlock() {
+        if (input.value === CODE) {
+          gate.style.display = "none";
+        } else {
+          error.style.display = "block";
+          input.value = "";
+          input.focus();
+        }
+      }
+
+      btn.addEventListener("click", tryUnlock);
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") tryUnlock();
+      });
+      input.focus();
+    })();
+  </script>
 
   <!-- ========== メニュー画面 ========== -->
   <div id="screen-menu" class="screen active">
